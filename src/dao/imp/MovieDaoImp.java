@@ -1,16 +1,10 @@
 package dao.imp;
 
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.System.Logger;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,32 +12,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
 import javax.swing.JOptionPane;
 import dao.ConexionMySql;
 import dao.Dao;
 import entitties.Movie;
 import entitties.MovieGenre;
-import util.GestorArchivos;
 
-
+//Se crea la clase que implementa las interfaces de conexion y metodos ABM
 public class MovieDaoImp implements ConexionMySql, Dao<Movie, Integer> {
 
 	public MovieDaoImp() {
 		// TODO Auto-generated constructor stub
 	}
 
+	//metodo de creacion de Base de Datos
 	@Override
 	public void crearBD () {
-		String sentenciaSQL = "CREATE DATABASE cinema";
-		Connection conexion = getConexion("");
+		String sentenciaSQL = "CREATE DATABASE cinema";  //sentencia SQL
+		Connection conexion = getConexion("");  //conexion a MySQL
 		try {
 			
-			Statement st = conexion.createStatement();
-		    st.executeUpdate(sentenciaSQL);
-			st.close();
+			Statement st = conexion.createStatement(); //el objeto conexion se instancia e invoca metodo propio
+		    st.executeUpdate(sentenciaSQL);   //ejecucion sentencia SQL
+			st.close();  //cierre conexion
 			
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Error al crear Base de dato");
@@ -52,6 +43,9 @@ public class MovieDaoImp implements ConexionMySql, Dao<Movie, Integer> {
 		
 	}
 	
+	//metodo creacion tabla de datos
+	//se hace la conexion a la Baase de Datos creada, recibe @parametro el nombre BD
+	//se ejecuta la sentencia SQL y cierra conexion
 	@Override
 	public void crearTabla () {
 		Connection conexion = getConexion("/cinema");
@@ -76,7 +70,10 @@ public class MovieDaoImp implements ConexionMySql, Dao<Movie, Integer> {
 		
 	}
 	
-	
+	/*metodo de busqueda de pelicula por codigo
+	 * Se instancia la conexion con BD y la sentencia SQL
+	 * se trabaja con ResultSet y se crea un ciclo while para pasar los valores de las variables al objeto SearchMovie
+	 */
 	@Override
 	public Movie buscarPorCodigo(Integer Key)  {
 		Movie searchMovie = null;
@@ -85,7 +82,6 @@ public class MovieDaoImp implements ConexionMySql, Dao<Movie, Integer> {
 		Statement st = null;
 		
 		Image image = null;
-		
 
 			try {
 				st = conexion.createStatement();
@@ -121,6 +117,12 @@ public class MovieDaoImp implements ConexionMySql, Dao<Movie, Integer> {
 		
 	
 
+	/* el metodo hace conexion con la BD a traves del objeto conexion y se instancia la sentencia SQL
+	 * se inicializa objeto tipo File y el objeto tipo Movie ies pasado como parametro con el metodo de mostrar ruta imagen
+	 * se convierte la imagen con FileInputStream y se inicializa con @parametro del obejto tipo File
+	 *  el objeto tipo PreparedStream invoca metodo set pasando por @parametro la posicion a ocuparse y el objeto tipo Movie convocando metodos get
+	 */
+	
 	@Override
 	public void insertar(Movie elemento) {
 		Connection conexion = getConexion("/cinema");
@@ -159,7 +161,15 @@ public class MovieDaoImp implements ConexionMySql, Dao<Movie, Integer> {
 	}
 	
 
-	@Override
+	/*el metodo  tipo boolean modifica datos de la pelicula y para esto recibe como @parametro un objeto tipo Movie y lo retorna
+	 * Se hace la conexion a la BD y se pasa la sentencia SQL como String 
+	 * el objeto conexion invoca el metodo preparateStatement pasando por @parametro la sentencia SQL
+	 * el objeto PreparateStatement invoca metodo set y se pasa por @parametro la posicion ocupada en BD y el objeto tipo movie con su metodo get
+	 * se cierra el metodo y las conexiones
+	 */
+	
+	
+@Override
 	public boolean actualizar(Movie elemento) {
 		boolean isUpdate = false;
 		Connection conexion = getConexion("/cinema");
@@ -189,6 +199,12 @@ public class MovieDaoImp implements ConexionMySql, Dao<Movie, Integer> {
 		return isUpdate;
 	}
 
+     /*
+      * metodo void para elminar pelicula, se pasa por @parametro dato tipo Interger que coincide con la Key en BD
+      * se crea la conexion y el objeto tipo PrepredStatament e invoca metodo set recibiendo por @paramentro la Key
+      * 																																																																																																																																																																																																																																								
+      * 
+      */
 	@Override
 	public void eliminar(Integer Key) {
 			Connection conexion = getConexion("/cinema");
@@ -207,6 +223,16 @@ public class MovieDaoImp implements ConexionMySql, Dao<Movie, Integer> {
 			}
 	}
 
+	
+	/*
+	 * El metodo listar pelicula es de tipo List y retorna el listado movies
+	 * se instancia de tipo String la variable que almacena la sentencia SQL
+	 * Se encierra en el ciclo While el objeto tipo Resulset con metodo next.
+	 * se instancia las variables y objeto tipo Movie
+	 * se añade al listado cada objto tipo Movie 
+	 * se cierran las conexiones
+	 */
+	
 	@Override
 	public List<Movie> listar() {
 		List<Movie> movies = new ArrayList <Movie>();
