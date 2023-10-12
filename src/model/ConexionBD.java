@@ -1,22 +1,23 @@
 package model;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import dao.Dao;
 import dao.imp.MovieDaoImp;
 import entitties.Movie;
 import entitties.MovieGenre;
-import util.MovieManager;
+
 
 public class ConexionBD {
 	
+	//se instancia el objeto movieDao
 	Dao<Movie, Integer> movieDao = new MovieDaoImp();
 	
 	public ConexionBD() {}
+	
 
+	//Se genera constructor para pasar recibir por @parametro un tipo de dato boolean
+	//se instancian objetos de la clase Movie
+	//objeto this.movieDao invoca metodo crearBD, crearTabla e insertar.
 	public ConexionBD(boolean create) {
 		try {
 			
