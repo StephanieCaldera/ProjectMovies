@@ -10,7 +10,7 @@ public class GestorArchivos {
 	public GestorArchivos() {
 		// TODO Auto-generated constructor stub
 	}
-	
+	//se creo por practicar el codigo. no fue utilizado en el proyecto
 	public static void copyInputStreamToFile (InputStream inputStream, File file) {
 		try(FileOutputStream archivoBinario = new FileOutputStream(file)) {
 			byte [] bytes = inputStream.readAllBytes();
