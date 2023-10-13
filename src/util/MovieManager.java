@@ -2,21 +2,19 @@ package util;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import entitties.Movie;
 import entitties.MovieGenre;
 
+//clase MovieManager
 public class MovieManager {
-	
+	//atributos
 	private String nombre;
 	private List<Movie>movies;
 
 	public MovieManager() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public MovieManager(String nombre) {
-		super();
 		this.nombre = nombre;
 		this.movies = new ArrayList<>();
 	}
@@ -40,10 +38,14 @@ public class MovieManager {
 		this.nombre = nombre;
 	}
 
-	//metodos
+	//se genera el metodo para insertar peliculas en la lista
 	public void addMovie (Movie mov) {
 		this.movies.add(mov);	
 	}
+
+	/*se genera metodo de listado de peliculas
+	 * se recorre el cliclo for para que muestre las peliculas
+	 */
 	
 	public void listMovies () {
 		for (Movie movie : movies) {
@@ -51,6 +53,8 @@ public class MovieManager {
 		}
 	}
 	
+	//se genera metodo para mostrar peliculas segun su genero, si esta vacia la lista muestra un mensaje
+	//se recorre el ciclo y muestra codigo y tutlo de la pelicula
 	public void showMovies (MovieGenre genero) {
 		if (movies.isEmpty()) {
 			System.out.println("no hay peliculas que mostrar");
@@ -64,6 +68,7 @@ public class MovieManager {
 	    }
 	}
 	
+	//se selecciona la pelicula segun el codigo y se muestran todos los datos, se hacen validaciones
 	public void selectMovie (Integer codigo) {
 		boolean isValid = false;
 			for (Movie cod : movies) {
@@ -74,7 +79,7 @@ public class MovieManager {
 		    }
 			if (!isValid)
 
-			    System.out.println("El código " + codigo.toString()+ " no es válido");
+			    System.out.println("El código no es válido");
 	}
 	
 

@@ -2,9 +2,6 @@ package model;
 
 import java.io.IOException;
 import java.util.Scanner;
-
-import dao.Dao;
-import dao.imp.MovieDaoImp;
 import entitties.Movie;
 import entitties.MovieGenre;
 import util.MovieManager;
@@ -15,29 +12,27 @@ public class main {
 	public main() {	
 	}
 
-	
     public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
 		
 
-		ConexionBD cbd = new ConexionBD();
-
+		//Se inicializan objetos cbd y movieManager
+    	ConexionBD cbd = new ConexionBD();
 		MovieManager movieManager = new MovieManager();
-		movieManager.setMovies(cbd.movieDao.listar());
+
+		//movieManager invoca metodo setMovie que recibe a cbd.movieDao que invoca metodo listar peliculas
+	    movieManager.setMovies(cbd.movieDao.listar());
 		
+		//uso del metodo estatico
 		getGestorPelicula(movieManager, cbd);
-	  
-		
-		Movie gg = cbd.movieDao.buscarPorCodigo(1);
-		//movie1.setTitulo("Aventuras del Mar");
-		//movieDao.actualizar(movie1);
-		
 	
 	}
 	
-	public static void getGestorPelicula(MovieManager movieManager, ConexionBD cbd) {
-	    Scanner scanner = new Scanner (System.in); 
+	//Se crea un metodo estatico para cumplir con el ABM de la película
+    public static void getGestorPelicula(MovieManager movieManager, ConexionBD cbd) {
+	    //se instancia Scanner, se genera el menú de opciones y se hace la validacion
+    	Scanner scanner = new Scanner (System.in); 
 		System.out.println("---- BIENVENIDO A TU GESTOR DE PELÍCULAS CINEMA -----");
 		System.out.println("MENU");
 		System.out.println("1. LISTAR PELÍCULAS");
@@ -47,8 +42,10 @@ public class main {
 		System.out.println("5. SALIR");
 		int seleccion = scanner.nextInt();
 		
-		switch (seleccion) {
-		  case 1: 
+		//se genera un switch para realizar las opciones del menú
+		switch (seleccion) {  
+		//método listar peliculas invocado por el objeto movieManager
+		case 1: 
 			movieManager.listMovies();
 			System.out.println("¿Volver?: 1. SI");
 			int ingreso = scanner.nextInt();
@@ -59,6 +56,7 @@ public class main {
 			}	
 			break;
 			
+			//Para filtrar películas se genera el método de seleccion de genero 
 		  case 2:
 			    System.out.println("Seleccione el género de la película");
 				System.out.println(MovieGenre.TERROR.name());
@@ -71,9 +69,11 @@ public class main {
 				String genero = scanner.next();
 				
 				try {
+				//se instancia el objeto para que muestre el valor de su literal	
 				MovieGenre gen = MovieGenre.valueOf(genero.toUpperCase());
+				//lista peliculas recibiendo como @parametro el genero. 
 				movieManager.showMovies(gen);
-				
+				//validaciones
 				} catch (Exception e){
 					System.out.println("Genero seleccionado no es valido");
 				}
@@ -86,6 +86,7 @@ public class main {
 				}	
 			
 			break;
+			//se filtra peliculas por codigo. 
 		  case 3: 
 			  System.out.println("Indique el código de la película a consultar");
 			  int codigo = scanner.nextInt();
@@ -98,7 +99,7 @@ public class main {
 					break;
 				}	
 			break;
-
+		  //SE genera un menu de gestor de peliculas y s etraba con switch
 		  case 4: 
 
 				System.out.println("Seleccione la opcion de su preferencia");
@@ -108,15 +109,21 @@ public class main {
 				System.out.println("4. Volver");
 				int opcionAdm = scanner.nextInt();
 				switch (opcionAdm) {
+				//metodo insertar película
 				case 1: 
+					//se genera el titulo
 					System.out.println("Inserte el título");
 					String titulo = scanner.next();
+					
+					//para seleccionar el genero se crea metodo estatico getGenere
+					//para la validacion se crea ciclo while, si es valido el genero sera el valor de la variable codGenere
 					boolean genereValid = false;
 					MovieGenre codGenere = null;
 					while (!genereValid) {
 						codGenere = getGenere(scanner);	
 						if (codGenere != null) {
 							genereValid = true;
+							//se genera la opcion de salir del sistema al usuario o continuar con el proceso
 						} else {
 							  System.out.println("Volver a intentar: 1. SI, 2. NO");
 							  int selecc1 = scanner.nextInt();
@@ -129,20 +136,24 @@ public class main {
 								}	
 						}
 					}
+					//se ingresa la URL
 					System.out.println("Ingrese la URL");
 					String url = scanner.next();
-					
+					// se ingresa la imagen
 					boolean imgValid = false;
 					String img = null;
 					while (!imgValid) {
 						System.out.println("Ingrese la ruta de la imagen");
-						img = scanner.next();	
+						img = scanner.next();
+						
+						//se inicializa el objeto movie y se inserta en la base de datos
 						try {
 							Movie movie = new Movie(titulo, codGenere, url, img);
 							cbd.movieDao.insertar(movie);
 							movieManager.setMovies(cbd.movieDao.listar());
 							System.out.println("Su película se insertó con éxito");
 							imgValid = true;
+							//se genera mensaje si se entra en el catch
 						}catch (Exception e){
 							System.out.println("Uno o varios datos son inválidos, valida la dirección de la imagen");
 							System.out.println("Volver a intentar: 1. SI, 2. NO");
@@ -157,7 +168,8 @@ public class main {
 						}
 					}
 					
-					  System.out.println("¿Volver?: 1. SI");
+					//al finalizar la funcion de insertar pelicula se vuelve al menu de opciones  
+					System.out.println("¿Volver?: 1. SI");
 					  int selecc1 = scanner.nextInt();
 					  switch (selecc1) {
 						case 1: 
@@ -165,18 +177,20 @@ public class main {
 							break;
 						}
 					break;
+				//Metodo de modificacion de pelicula	
 				case 2: 
-					//
+					//se solicita ingreso del codigo de pelicula a modificar y se hace la validacion.
 					System.out.println("Indique el código de la película a modificar");
 					int codigoModif = scanner.nextInt();
 					  Movie peli = cbd.movieDao.buscarPorCodigo(codigoModif);
 					  if(peli == null)
 						    System.out.println("Código no valido");
+					//se solicita titulo, seleccion genero, ingreso URL e imagen
 						else  {   
 							System.out.println("Inserte el nuevo título");
 							String titulo1 = scanner.next();
 							
-							
+							//seleccion genero usando metodo getGenere
 							boolean genereValid1 = false;
 							MovieGenre codGenere1 = null;
 							while (!genereValid1) {
@@ -196,15 +210,19 @@ public class main {
 								}
 							}
 							
-													System.out.println("Ingrese la nueva ruta URL");
+		                //solicitud de URL
+						System.out.println("Ingrese la nueva ruta URL");
 						String url1 = scanner.next();
+						//Solicitud ingreso ruta imagen con validaciones
 						boolean imgValid1 = false;
 						String img1 = null;
 						while (!imgValid1) {
 							System.out.println("Ingrese la nueva ruta de la imagen");
 							img = scanner.next();	
+						
+							//se inicializa movie e invoca metodo actualizar pelicula, se hacen validaciones
 							try {
-								Movie movie = new Movie(codigoModif, titulo1, codGenere1, url1, img);
+							Movie movie = new Movie(codigoModif, titulo1, codGenere1, url1, img);
 								cbd.movieDao.actualizar(movie);
 								movieManager.setMovies(cbd.movieDao.listar());
 								System.out.println("Su película se modificó con éxito");
@@ -233,20 +251,22 @@ public class main {
 					  
 							break;
 				case 3: 
-					//
+					//metodo eliminar pelicula. se selecciona la pelicula, se hacen validaciones
 				  System.out.println("Indique el código de la película a eliminar");
 				  int codigoEliminar = scanner.nextInt();
 				  Movie peli1 = cbd.movieDao.buscarPorCodigo(codigoEliminar);
 				  if(peli1 == null)
 					    System.out.println("Pelicula no valida");
 					else  {
+						//el objetp cbd.movieDao invoca metodo eliminar pelicula
 						cbd.movieDao.eliminar(codigoEliminar);
 						movieManager.setMovies(cbd.movieDao.listar());
 						System.out.println("Película eliminada con éxito");
 						
 					}
 
-					System.out.println("¿Volver?: 1. SI");
+					//se regresa al menu principal
+				  System.out.println("¿Volver?: 1. SI");
 					int volver4 = scanner.nextInt();
 					switch (volver4) {
 					case 1: 
@@ -254,15 +274,17 @@ public class main {
 						break;
 					}	
 					break;
+					//opcion de volver al menu principal
 				case 4: 
 					getGestorPelicula(movieManager, cbd);
 					break;
 				}	
 			break;
 
+		 //Ocion del menu principal para salir del sistema.
 		  case 5: 
 			break;
-			
+			//al seleccionar opcion 6 o mas del menu principal se genera el mensaje
 		default:
 				System.out.println("Opcion invalida");
 			}

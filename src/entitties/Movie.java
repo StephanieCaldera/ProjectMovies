@@ -15,13 +15,12 @@ public class Movie {
 	private String rutaImagen;
 	private Image imagen;
 	
-	//se crea el constructor con parametros
-	
-
+	//se crea el constructor generico
 	public Movie() {
 		// TODO Auto-generated constructor stub
 	}
 
+	//se crea un constructor parametrizado con todos los atributos
 	public Movie(int codigo, String titulo, MovieGenre genero, String url, String rutaImagen) throws IOException {
 		super();
 		this.titulo = titulo;
@@ -35,7 +34,7 @@ public class Movie {
 		}
 	}
 	
-	
+	//se crea otro constructor parametrizado sin el codigo
 	public Movie(String titulo, MovieGenre genero, String url, String rutaImagen) throws IOException {
 		super();
 		this.titulo = titulo;
@@ -101,11 +100,11 @@ public class Movie {
 	}
 
 	
-	//otros metodos
+	//sobreescribiendo el metodo toString
 	@Override
 	public String toString() {
-		return "Movie [titulo=" + titulo + ", codigo=" + codigo + ", url=" + url + ", genero=" + genero + ", imagen="
-				+ imagen + "]";		 
+		return "Título de la película: " + titulo + ", Código: " + codigo + ", URL: " + url + ", Género: " + genero + ", Imagen: "
+				+ imagen;		 
 	}
 	
 	
